@@ -1,6 +1,6 @@
 <div align="center">
 
-<a href="https://ai.pacod.io"><img src="https://ai.pacod.io/og.png" alt="pacod — open-source building blocks for AI products" width="720"></a>
+<a href="https://ai.pacod.io"><img src="pacod-hero.svg" alt="pacod: people and services sign in once through pacod-id, use AI products built on pacod-ap, pacod-cms and pacod-kb, and every model call goes through pacod-gw to any LLM provider" width="100%"></a>
 
 # pacod
 
