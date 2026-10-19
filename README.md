@@ -99,23 +99,15 @@ Ingests files and web pages, converts to canonical Markdown, indexes for hybrid 
 
 Every LLM call goes through the gateway. Every person signs in through the identity provider. The products on top stay simple — and never hold a provider's key.
 
-```mermaid
-flowchart LR
-    U([People & services])
-    subgraph Products
-        AP[AP · pacod-ap]
-        CM[CM · pacod-cms]
-        KB[KB · pacod-kb]
-    end
-    ID[ID · pacod-id]
-    GW[GW · pacod-gw]
-    LLM([LLM providers])
+<p align="center">
+  <img src="pacod-architecture.svg" alt="Architecture: people and services sign in through pacod-id, which provides identity and roles to pacod-ap, pacod-cms and pacod-kb; every LLM call from these products goes through pacod-gw to the LLM providers" width="100%">
+</p>
 
-    U --> AP & CM & KB
-    AP & CM & KB -. sign-in & roles .-> ID
-    AP & CM & KB -- LLM calls --> GW
-    GW --> LLM
-```
+| Layer | Project | Responsibility |
+|---|---|---|
+| Identity | pacod-id | OIDC sign-in, accounts, organisations, roles; change feed for local access checks |
+| Products | pacod-ap · pacod-cms · pacod-kb | Agents, editorial sites, knowledge — sign-in via pacod-id, model calls via pacod-gw, never hold provider keys |
+| Model access | pacod-gw | Provider keys, quotas, per-call pricing, usage analytics; OpenAI / Anthropic / Gemini dialects |
 
 Interactive diagram: [ai.pacod.io/#architecture](https://ai.pacod.io/#architecture)
 
