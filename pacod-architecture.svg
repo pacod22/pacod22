@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720" role="img" aria-labelledby="t d">
+  <title id="t">How the pacod projects fit together</title>
+  <desc id="d">People and services sign in through pacod-id, which issues identity and roles to pacod-ap, pacod-cms and pacod-kb. Every LLM call from these products goes through pacod-gw, which holds provider keys, enforces quotas and prices calls before forwarding to LLM providers.</desc>
+  <defs>
+    <style>
+      text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+      .cap { font-size: 13px; font-weight: 700; fill: #8b93a7; letter-spacing: 1.6px; }
+      .name { font-size: 21px; font-weight: 700; fill: #f5f6fa; }
+      .role { font-size: 13px; font-weight: 700; letter-spacing: 1.2px; }
+      .body { font-size: 16px; fill: #c9cfdb; }
+      .muted { font-size: 15px; fill: #9aa3b5; }
+      .badge { font-size: 17px; font-weight: 800; }
+      .lbl { font-size: 14px; font-weight: 600; }
+      .pill { font-size: 15px; font-weight: 600; fill: #d7dbe5; }
+      .note { font-size: 16px; fill: #9aa3b5; }
+    </style>
+    <marker id="mn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#8b93a7"/></marker>
+    <marker id="mv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#a78bfa"/></marker>
+    <marker id="mt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#2dd4bf"/></marker>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#121521"/>
+      <stop offset="1" stop-color="#0c0e14"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="720" rx="24" fill="url(#bg)"/>
+
+  <!-- 1. People & services -->
+  <rect x="64" y="36" width="1152" height="68" rx="14" fill="#171a23" stroke="#2a2f3a"/>
+  <text x="88" y="76" class="cap">PEOPLE &amp; SERVICES</text>
+  <g transform="translate(330 70)" fill="none" stroke="#c9cfdb" stroke-width="2.5">
+    <circle cx="0" cy="-7" r="8"/><path d="M-14 15 Q-14 3 0 3 Q14 3 14 15"/>
+  </g>
+  <text x="352" y="77" class="body">People in a browser</text>
+  <g transform="translate(560 70)">
+    <rect x="-16" y="-13" width="32" height="25" rx="5" fill="none" stroke="#c9cfdb" stroke-width="2.5"/>
+    <text x="0" y="4" text-anchor="middle" style="font-size:11px;font-weight:800;fill:#c9cfdb;font-family:ui-monospace,Menlo,Consolas,monospace">&lt;/&gt;</text>
+  </g>
+  <text x="584" y="77" class="body">Services · apps · agents · scripts</text>
+
+  <!-- arrow 1 -> 2 -->
+  <line x1="640" y1="106" x2="640" y2="134" stroke="#a78bfa" stroke-width="3" marker-end="url(#mv)"/>
+  <text x="654" y="126" class="lbl" fill="#a78bfa">sign in once</text>
+
+  <!-- 2. pacod-id -->
+  <rect x="64" y="138" width="1152" height="96" rx="16" fill="#1c1630" stroke="#a78bfa" stroke-width="2"/>
+  <rect x="88" y="162" width="56" height="48" rx="11" fill="#a78bfa"/>
+  <text x="116" y="192" class="badge" text-anchor="middle" fill="#1c1630">ID</text>
+  <text x="164" y="182" class="name">pacod-id</text>
+  <text x="164" y="206" class="role" fill="#c4b5fd">IDENTITY &amp; ACCESS</text>
+  <text x="470" y="180" class="body">OpenID Connect · accounts · organisations · role bindings</text>
+  <text x="470" y="206" class="muted">A change feed lets every product decide access locally</text>
+
+  <!-- arrows 2 -> 3 -->
+  <line x1="244" y1="236" x2="244" y2="266" stroke="#a78bfa" stroke-width="3" marker-end="url(#mv)"/>
+  <line x1="640" y1="236" x2="640" y2="266" stroke="#a78bfa" stroke-width="3" marker-end="url(#mv)"/>
+  <line x1="1036" y1="236" x2="1036" y2="266" stroke="#a78bfa" stroke-width="3" marker-end="url(#mv)"/>
+  <text x="1050" y="258" class="lbl" fill="#a78bfa">identity &amp; roles</text>
+
+  <!-- 3. products -->
+  <text x="640" y="291" class="cap" text-anchor="middle" style="display:none">YOUR AI PRODUCTS</text>
+  <g>
+    <rect x="64" y="270" width="360" height="136" rx="14" fill="#151c2b" stroke="#3b82f6" stroke-opacity=".6"/>
+    <rect x="88" y="292" width="52" height="46" rx="10" fill="#60a5fa"/>
+    <text x="114" y="321" class="badge" text-anchor="middle" fill="#0f1117">AP</text>
+    <text x="156" y="312" class="name">pacod-ap</text>
+    <text x="156" y="334" class="role" fill="#93c5fd">AGENT PLATFORM</text>
+    <text x="88" y="368" class="body">Many agents, one deployment</text>
+    <text x="88" y="391" class="muted">RAG · MCP tools · visual editor</text>
+  </g>
+  <g>
+    <rect x="460" y="270" width="360" height="136" rx="14" fill="#151c2b" stroke="#3b82f6" stroke-opacity=".6"/>
+    <rect x="484" y="292" width="52" height="46" rx="10" fill="#60a5fa"/>
+    <text x="510" y="321" class="badge" text-anchor="middle" fill="#0f1117">CM</text>
+    <text x="552" y="312" class="name">pacod-cms</text>
+    <text x="552" y="334" class="role" fill="#93c5fd">CONTENT MANAGEMENT</text>
+    <text x="484" y="368" class="body">Many editorial sites, one stack</text>
+    <text x="484" y="391" class="muted">Articles · ads · AI translation</text>
+  </g>
+  <g>
+    <rect x="856" y="270" width="360" height="136" rx="14" fill="#151c2b" stroke="#3b82f6" stroke-opacity=".6"/>
+    <rect x="880" y="292" width="52" height="46" rx="10" fill="#60a5fa"/>
+    <text x="906" y="321" class="badge" text-anchor="middle" fill="#0f1117">KB</text>
+    <text x="948" y="312" class="name">pacod-kb</text>
+    <text x="948" y="334" class="role" fill="#93c5fd">RAG KNOWLEDGE BASE</text>
+    <text x="880" y="368" class="body">Versioned, searchable knowledge</text>
+    <text x="880" y="391" class="muted">Hybrid search · BGE-M3 + BM25</text>
+  </g>
+
+  <!-- arrows 3 -> 4 -->
+  <line x1="244" y1="408" x2="244" y2="438" stroke="#2dd4bf" stroke-width="3" marker-end="url(#mt)"/>
+  <line x1="640" y1="408" x2="640" y2="438" stroke="#2dd4bf" stroke-width="3" marker-end="url(#mt)"/>
+  <line x1="1036" y1="408" x2="1036" y2="438" stroke="#2dd4bf" stroke-width="3" marker-end="url(#mt)"/>
+  <text x="1050" y="430" class="lbl" fill="#2dd4bf">every LLM call</text>
+
+  <!-- 4. pacod-gw -->
+  <rect x="64" y="442" width="1152" height="96" rx="16" fill="#0f2524" stroke="#2dd4bf" stroke-width="2"/>
+  <rect x="88" y="466" width="56" height="48" rx="11" fill="#2dd4bf"/>
+  <text x="116" y="496" class="badge" text-anchor="middle" fill="#0f2524">GW</text>
+  <text x="164" y="486" class="name">pacod-gw</text>
+  <text x="164" y="510" class="role" fill="#99f6e4">AI GATEWAY</text>
+  <text x="470" y="484" class="body">Holds provider keys · enforces quotas · prices every call</text>
+  <text x="470" y="510" class="muted">Proxy &amp; managed modes · OpenAI, Anthropic, Gemini dialects · usage analytics</text>
+
+  <!-- arrow 4 -> 5 -->
+  <line x1="640" y1="540" x2="640" y2="568" stroke="#2dd4bf" stroke-width="3" marker-end="url(#mt)"/>
+
+  <!-- 5. LLM providers -->
+  <rect x="64" y="572" width="1152" height="68" rx="14" fill="#171a23" stroke="#2a2f3a"/>
+  <text x="88" y="612" class="cap">LLM PROVIDERS</text>
+  <rect x="330" y="588" width="150" height="36" rx="18" fill="#1f2330" stroke="#323848"/>
+  <text x="405" y="611" class="pill" text-anchor="middle">OpenAI</text>
+  <rect x="496" y="588" width="150" height="36" rx="18" fill="#1f2330" stroke="#323848"/>
+  <text x="571" y="611" class="pill" text-anchor="middle">Anthropic</text>
+  <rect x="662" y="588" width="150" height="36" rx="18" fill="#1f2330" stroke="#323848"/>
+  <text x="737" y="611" class="pill" text-anchor="middle">Gemini</text>
+  <rect x="828" y="588" width="190" height="36" rx="18" fill="#1f2330" stroke="#323848" stroke-dasharray="5 4"/>
+  <text x="923" y="611" class="pill" text-anchor="middle">Self-hosted models</text>
+
+  <!-- footer note -->
+  <text x="640" y="682" class="note" text-anchor="middle">Products never hold a provider key  ·  each project also runs on its own</text>
+</svg>
