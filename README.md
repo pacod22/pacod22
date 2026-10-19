@@ -1,16 +1,21 @@
 <div align="center">
 
+<a href="https://ai.pacod.io"><img src="https://ai.pacod.io/og.png" alt="pacod — open-source building blocks for AI products" width="720"></a>
+
 # pacod
 
-**Open-source building blocks for AI products that you run yourself.**
+**Building blocks for AI products that you run yourself.**
 
-One gateway for every model · one sign-in for every product · platforms for agents, content and knowledge.
+Five open-source projects that fit together: one gateway for every model, one sign-in for every product,<br>
+and the platforms you build on top of them — agents, content and knowledge.
 
 [![Website](https://img.shields.io/badge/web-ai.pacod.io-0f1117?style=flat-square)](https://ai.pacod.io)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue?style=flat-square)](https://www.apache.org/licenses/LICENSE-2.0)
 ![Self-hosted](https://img.shields.io/badge/deploy-self--hosted-2ea44f?style=flat-square)
+![Docker](https://img.shields.io/badge/Docker_Compose-%E2%9C%93-2496ED?style=flat-square&logo=docker&logoColor=white)
+![Helm](https://img.shields.io/badge/Helm-%E2%9C%93-0F1689?style=flat-square&logo=helm&logoColor=white)
 
-[**Website**](https://ai.pacod.io) · [Projects](https://ai.pacod.io/projects) · [Architecture](https://ai.pacod.io/#architecture)
+[**Website**](https://ai.pacod.io) · [Projects](https://ai.pacod.io/projects) · [How it fits](https://ai.pacod.io/#architecture)
 
 [English](https://ai.pacod.io/) · [Български](https://ai.pacod.io/bg) · [Deutsch](https://ai.pacod.io/de) · [Русский](https://ai.pacod.io/ru)
 
@@ -20,71 +25,128 @@ One gateway for every model · one sign-in for every product · platforms for ag
 
 ## Projects
 
-Each project is a complete product with its own repository, documentation and Docker setup. Use one on its own or run them together.
+Use one on its own, or run them together. Each is a complete product with its own repository, documentation and Docker setup.
 
-| | Project | Role | Highlights | Stack |
+| | Project | Role | What it does | Repo |
 |---|---|---|---|---|
-| **GW** | [pacod-gw](https://github.com/pacod22/pacod-gw) · [docs](https://ai.pacod.io/projects/pacod-gw) | AI gateway | Proxy + managed modes on one core · OpenAI / Anthropic / Gemini dialects · quotas, cost, analytics per workspace | Rust · PostgreSQL · ClickHouse · SvelteKit |
-| **ID** | [pacod-id](https://github.com/pacod22/pacod-id) · [docs](https://ai.pacod.io/projects/pacod-id) | Identity & access | OpenID Connect (conformance-tested) · one rules engine in Rust, TS, Python · branded sign-in, light/dark | Rust · axum · PostgreSQL · OIDC |
-| **AP** | [pacod-ap](https://github.com/pacod22/pacod-ap) · [docs](https://ai.pacod.io/projects/pacod-ap) | Agent-building platform | Many isolated agents, one deployment · RAG, MCP tools, visual agent editor · review loop that improves every agent | FastAPI · LangGraph · MCP · SvelteKit |
-| **KB** | [pacod-kb](https://github.com/pacod22/pacod-kb) · [docs](https://ai.pacod.io/projects/pacod-kb) | RAG knowledge base | Hybrid search (BGE-M3 + BM25) · versioned, point-in-time queries · built-in prompt-injection defence | FastAPI · Qdrant · BGE-M3 · BM25 |
-| **CM** | [pacod-cms](https://github.com/pacod22/pacod-cms) · [docs](https://ai.pacod.io/projects/pacod-cms) | Content management | Many websites on one stack · articles, ads, statistics in one studio · AI translation via the gateway | Java 25 · Spring Boot 4.1 · Thymeleaf · MongoDB |
+| **GW** | [pacod-gw](https://ai.pacod.io/projects/pacod-gw) | AI gateway | One gateway in front of every model — keys, prices, quotas and usage your apps should not hold | [![](https://img.shields.io/badge/Rust-000?style=flat-square&logo=rust)](https://github.com/pacod22/pacod-gw) |
+| **CM** | [pacod-cms](https://ai.pacod.io/projects/pacod-cms) | Content management | One stack, many editorial websites — articles, ads, statistics, built-in AI translation | [![](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white)](https://github.com/pacod22/pacod-cms) |
+| **AP** | [pacod-ap](https://ai.pacod.io/projects/pacod-ap) | Agent-building platform | Any number of AI agents on one deployment — each with own knowledge, prompts, rules | [![](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)](https://github.com/pacod22/pacod-ap) |
+| **ID** | [pacod-id](https://ai.pacod.io/projects/pacod-id) | Identity & access | One sign-in for people and machines, with recorded permissions across all products | [![](https://img.shields.io/badge/Rust-000?style=flat-square&logo=rust)](https://github.com/pacod22/pacod-id) |
+| **KB** | [pacod-kb](https://ai.pacod.io/projects/pacod-kb) | RAG knowledge base | Files and web pages → versioned, searchable knowledge with a stable model contract | [![](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)](https://github.com/pacod22/pacod-kb) |
+
+<details>
+<summary><b>GW · pacod-gw</b> — AI gateway</summary>
+
+Sits between applications and LLM providers. Rust core relays or translates every call, keeps provider keys out of apps, enforces quotas, prices each request, streams usage into ClickHouse — managed from a SvelteKit console.
+
+| Highlights | Stack |
+|---|---|
+| Proxy + managed modes on one Rust core<br>OpenAI, Anthropic, Gemini dialects<br>Quotas, cost, analytics per workspace | Rust · PostgreSQL · ClickHouse · SvelteKit · Caddy · Docker · Helm · Prometheus |
+
+[Docs](https://ai.pacod.io/projects/pacod-gw) · [Repository](https://github.com/pacod22/pacod-gw)
+</details>
+
+<details>
+<summary><b>CM · pacod-cms</b> — Content management</summary>
+
+CMS for editorial websites. One installation hosts many sites, each with own database, files and cache; multilingual editor studio; fast, host-routed public sites.
+
+| Highlights | Stack |
+|---|---|
+| Many websites on one stack<br>Articles, ads, statistics in one studio<br>AI translation via pacod-gw | Java 25 · Spring Boot 4.1 · Thymeleaf · MongoDB · Maven · Caddy · Gotenberg · Docker |
+
+[Docs](https://ai.pacod.io/projects/pacod-cms) · [Repository](https://github.com/pacod22/pacod-cms)
+</details>
+
+<details>
+<summary><b>AP · pacod-ap</b> — Agent-building platform</summary>
+
+Every agent (profile) has its own knowledge base, reference facts, prompts, directives, configuration, conversations and reviews — sharing one sign-in, one admin console and one LLM gateway.
+
+| Highlights | Stack |
+|---|---|
+| Many self-contained agents, one deployment<br>RAG, MCP tools, visual agent editor<br>Review loop that improves every agent | FastAPI · LangGraph · MCP · SvelteKit · PostgreSQL · Redis · Qdrant · Caddy |
+
+[Docs](https://ai.pacod.io/projects/pacod-ap) · [Repository](https://github.com/pacod22/pacod-ap)
+</details>
+
+<details>
+<summary><b>ID · pacod-id</b> — Identity and access</summary>
+
+OpenID Connect provider for first-party applications: accounts, organisations, role bindings, and a change feed products follow to decide access locally. Client libraries for Rust, TypeScript, Python.
+
+| Highlights | Stack |
+|---|---|
+| OIDC, conformance-tested<br>One rules engine in Rust, TypeScript, Python<br>Branded sign-in pages, light/dark | Rust · axum · PostgreSQL · OpenID Connect · SvelteKit · Docker · Helm |
+
+[Docs](https://ai.pacod.io/projects/pacod-id) · [Repository](https://github.com/pacod22/pacod-id)
+</details>
+
+<details>
+<summary><b>KB · pacod-kb</b> — RAG knowledge base</summary>
+
+Ingests files and web pages, converts to canonical Markdown, indexes for hybrid semantic + keyword search, keeps every version, serves chunks with a stable metadata contract. CPU-only.
+
+| Highlights | Stack |
+|---|---|
+| Hybrid search: BGE-M3 + BM25<br>Every version kept, point-in-time queries<br>Built-in prompt-injection defence | FastAPI · Qdrant · BGE-M3 · BM25 · SQLite · PostgreSQL · HTMX · Docker |
+
+[Docs](https://ai.pacod.io/projects/pacod-kb) · [Repository](https://github.com/pacod22/pacod-kb)
+</details>
 
 ## How they fit together
 
-Every LLM call goes through **pacod-gw**. Every person and service signs in through **pacod-id**. Products on top stay simple and never hold a provider key.
+Every LLM call goes through the gateway. Every person signs in through the identity provider. The products on top stay simple — and never hold a provider's key.
 
 ```mermaid
 flowchart LR
     U([People & services])
     subgraph Products
-        AP[pacod-ap<br/>agents]
-        CM[pacod-cms<br/>content]
-        KB[pacod-kb<br/>knowledge]
+        AP[AP · pacod-ap]
+        CM[CM · pacod-cms]
+        KB[KB · pacod-kb]
     end
-    ID[pacod-id<br/>identity]
-    GW[pacod-gw<br/>gateway]
+    ID[ID · pacod-id]
+    GW[GW · pacod-gw]
     LLM([LLM providers])
 
     U --> AP & CM & KB
     AP & CM & KB -. sign-in & roles .-> ID
     AP & CM & KB -- LLM calls --> GW
-    AP -- retrieval --> KB
     GW --> LLM
 ```
 
-Interactive version: [ai.pacod.io/#architecture](https://ai.pacod.io/#architecture)
+Interactive diagram: [ai.pacod.io/#architecture](https://ai.pacod.io/#architecture)
 
-## Principles
+## Built on a few firm ideas
 
-| Principle | Meaning |
+| | |
 |---|---|
 | **Open source** | Apache-2.0 — source, tests and threat models in the open |
 | **Self-hosted** | Docker Compose for a laptop, Helm charts where it matters; data stays on your machines |
-| **One sign-in** | pacod-id authenticates users across all products and records what they may do |
-| **One gateway** | pacod-gw holds keys, prices calls and enforces quotas for every product |
+| **One sign-in** | pacod-id signs people in to every product and records what they may do |
+| **One gateway** | pacod-gw holds the keys, prices the calls and enforces the quotas — for every product |
 
-## Quick start
+## Try it on your laptop
 
-Every project starts with a couple of `make` commands and a **mock model provider** — nothing leaves your machine until you configure a real one.
+Each project starts with a couple of `make` commands and a **mock model provider** — nothing leaves your machine until you want it to.
 
 ```bash
 git clone https://github.com/pacod22/pacod-gw.git
 cd pacod-gw
-# follow the README of the repository
+# see the repository README for the make targets
 ```
 
-Recommended order: **pacod-gw → pacod-id → pacod-ap / pacod-kb / pacod-cms**.
-Start here: [ai.pacod.io/projects/pacod-gw](https://ai.pacod.io/projects/pacod-gw)
+→ [Start with the gateway](https://ai.pacod.io/projects/pacod-gw)
 
 ## Contributing
 
-Issues and ideas are welcome in each project's issue tracker.
-Code contributions are **not accepted** at this time.
+pacod is a family of open-source projects. Issues and ideas are welcome on GitHub; **code contributions are not accepted for now**.
 
 ## License
 
-All projects are licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+Open source under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
 
 <div align="center">
 <sub><a href="https://ai.pacod.io">ai.pacod.io</a> · <a href="https://github.com/pacod22">github.com/pacod22</a></sub>
