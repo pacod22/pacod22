@@ -15,7 +15,7 @@ and the platforms you build on top of them — agents, content and knowledge.
 ![Docker](https://img.shields.io/badge/Docker_Compose-%E2%9C%93-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![Helm](https://img.shields.io/badge/Helm-%E2%9C%93-0F1689?style=flat-square&logo=helm&logoColor=white)
 
-[**Website**](https://ai.pacod.io) · [Projects](https://ai.pacod.io/projects) · [How it fits](https://ai.pacod.io/#architecture)
+[**Website**](https://ai.pacod.io) · [Projects](https://ai.pacod.io/projects) · [How it fits](https://ai.pacod.io/#architecture) · [Run the whole stack](https://github.com/pacod22/pacod-demo)
 
 [English](https://ai.pacod.io/) · [Български](https://ai.pacod.io/bg) · [Deutsch](https://ai.pacod.io/de) · [Русский](https://ai.pacod.io/ru)
 
@@ -25,7 +25,7 @@ and the platforms you build on top of them — agents, content and knowledge.
 
 ## Projects
 
-Use one on its own, or run them together. Each is a complete product with its own repository, documentation and Docker setup.
+Use one on its own, or run them together. Each is a complete product with its own repository, documentation and Docker setup — and [pacod-demo](https://github.com/pacod22/pacod-demo) runs all five as one platform.
 
 | | Project | Role | What it does | Repo |
 |---|---|---|---|---|
@@ -109,6 +109,8 @@ Every LLM call goes through the gateway. Every person signs in through the ident
 | Products | pacod-ap · pacod-cms · pacod-kb | Agents, editorial sites, knowledge — sign-in via pacod-id, model calls via pacod-gw, never hold provider keys |
 | Model access | pacod-gw | Provider keys, quotas, per-call pricing, usage analytics; OpenAI / Anthropic / Gemini dialects |
 
+Run together, the products share **one of each common component** on one Docker network, `pacod-net`: one Caddy, one PostgreSQL (a database and role per product), one Qdrant, one embeddings service, one pacod-id, one gateway and one monitoring stack (Prometheus, Grafana, OpenTelemetry). Stores a product owns stay with it — the gateway's ClickHouse, the CMS's MongoDB, the agent platform's Redis. Run alone, each repository brings its own copies of the shared parts.
+
 Interactive diagram: [ai.pacod.io/#architecture](https://ai.pacod.io/#architecture)
 
 ## Built on a few firm ideas
@@ -122,15 +124,34 @@ Interactive diagram: [ai.pacod.io/#architecture](https://ai.pacod.io/#architectu
 
 ## Try it on your laptop
 
-Each project starts with a couple of `make` commands and a **mock model provider** — nothing leaves your machine until you want it to.
+**The whole stack** — identity, gateway, agents, CMS and knowledge base working together — comes from [pacod-demo](https://github.com/pacod22/pacod-demo): one configuration file, one `make`.
 
 ```bash
-git clone https://github.com/pacod22/pacod-gw.git
-cd pacod-gw
-# see the repository README for the make targets
+mkdir pacod && cd pacod
+for r in pacod-demo pacod-id pacod-gw pacod-ap pacod-cms pacod-kb; do
+  git clone https://github.com/pacod22/$r.git
+done
+cd pacod-demo
+make up        # build, start, bootstrap; prints the addresses and the admin's password
+make verify    # check that everything works together
 ```
 
-→ [Start with the gateway](https://ai.pacod.io/projects/pacod-gw)
+Everything sits behind one port, with one sign-in for every product:
+
+| Address | What |
+|---|---|
+| `app.localhost:8800` | agent platform — chat and admin console |
+| `console.localhost:8800` | gateway console — providers, models, keys, usage |
+| `studio.localhost:8800` · `demo.localhost:8800` | CMS studio and a demo website |
+| `kb.localhost:8800` | knowledge base |
+| `id.localhost:8800/admin` | identity administration |
+| `grafana.localhost:8800` | dashboards of every product |
+
+With no provider key set, every model call goes to the gateway's **mock provider** — nothing leaves your machine until you add a key to `demo.env`. Needs Docker with Compose 2.24+ and about 8 GB of memory for Docker; the first build takes 30–60 minutes, later starts about two.
+
+**One project on its own** starts with a couple of `make` commands and the same mock provider — see each repository's README.
+
+→ [Run the whole stack](https://github.com/pacod22/pacod-demo) · [Start with the gateway](https://ai.pacod.io/projects/pacod-gw)
 
 ## Contributing
 
