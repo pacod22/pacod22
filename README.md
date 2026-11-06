@@ -6,8 +6,9 @@
 
 **Building blocks for AI products that you run yourself.**
 
-Six open-source projects that fit together: one gateway for every model, one sign-in for every product,<br>
-the platforms you build on top of them — agents, content and knowledge — and benchmarks that measure the gateway.<br>
+Eight open-source projects that fit together: one gateway for every model, one sign-in for every product,<br>
+the platforms you build on top of them — agents, content and knowledge — benchmarks that measure the gateway,<br>
+a broker that finds what can be called, and model data read from the vendors' own pages.<br>
 PACOD runs its own AI assistants and its website on them, at [app.pacod.io](https://app.pacod.io) and [www.pacod.io](https://www.pacod.io).
 
 [![Website](https://img.shields.io/badge/web-pacod.io-0f1117?style=flat-square)](https://www.pacod.io)
@@ -26,7 +27,7 @@ PACOD runs its own AI assistants and its website on them, at [app.pacod.io](http
 
 ## Projects
 
-Use one on its own, or run them together. Each is a complete product with its own repository, documentation and Docker setup — and [pacod-demo](https://github.com/pacod22/pacod-demo) runs all six as one platform, live at [demo.pacod.io](https://demo.pacod.io).
+Use one on its own, or run them together. Each is a complete product with its own repository, documentation and Docker setup — and [pacod-demo](https://github.com/pacod22/pacod-demo) runs all eight as one platform, live at [demo.pacod.io](https://demo.pacod.io).
 
 | | Project | Role | What it does | Repo |
 |---|---|---|---|---|
@@ -36,6 +37,8 @@ Use one on its own, or run them together. Each is a complete product with its ow
 | **ID** | [pacod-id](https://www.pacod.io/p/pacod-id) | Identity & access | One sign-in for people and machines, with recorded permissions across all products | [![](https://img.shields.io/badge/Rust-000?style=flat-square&logo=rust)](https://github.com/pacod22/pacod-id) |
 | **KB** | [pacod-kb](https://www.pacod.io/p/pacod-kb) | RAG knowledge base | Files and web pages → versioned, searchable knowledge with a stable model contract | [![](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)](https://github.com/pacod22/pacod-kb) |
 | **BM** | [pacod-benchmark](https://www.pacod.io/p/pacod-benchmark) | Gateway benchmarks | Measures what the gateway adds — many configurations at once, each against a baseline straight to the mock | [![](https://img.shields.io/badge/Rust-000?style=flat-square&logo=rust)](https://github.com/pacod22/pacod-benchmark) |
+| **BR** | [pacod-broker](https://github.com/pacod22/pacod-broker) | Discovery & reputation | Providers announce models, MCP servers, agents and compute; consumers discover them, with prices and availability over time, and both earn a reputation | [![](https://img.shields.io/badge/Rust-000?style=flat-square&logo=rust)](https://github.com/pacod22/pacod-broker) |
+| **AG** | [pacod-aggregator](https://github.com/pacod22/pacod-aggregator) | Model data | Which models a vendor offers, what they can do, which parameters they take and what they cost, read from the vendors' own pages and published as one catalogue | [![](https://img.shields.io/badge/Rust-000?style=flat-square&logo=rust)](https://github.com/pacod22/pacod-aggregator) |
 
 <details>
 <summary><b>GW · pacod-gw</b> — AI gateway</summary>
@@ -109,6 +112,30 @@ Measures pacod-gw — managed and proxy modes, the minimal gateway, deployment l
 [Docs](https://www.pacod.io/p/pacod-benchmark) · [Repository](https://github.com/pacod22/pacod-benchmark)
 </details>
 
+<details>
+<summary><b>BR · pacod-broker</b> — Discovery and reputation</summary>
+
+Providers announce what can be called: models, MCP servers, agents, tools and GPU capacity, each with its interfaces, its prices and availability over time and the hardware it runs on. Consumers discover it, and both sides earn a reputation. pacod-gw offers its templates there, takes models the broker lists at its providers as proposals, and confirms how calls went.
+
+| Highlights | Stack |
+|---|---|
+| Providers announce, consumers discover<br>Prices and availability over time<br>A reputation for both sides | Rust · axum · SvelteKit · MCP · Caddy · Docker · Prometheus |
+
+[Repository](https://github.com/pacod22/pacod-broker)
+</details>
+
+<details>
+<summary><b>AG · pacod-aggregator</b> — Model data</summary>
+
+Renders the pricing and model pages of LLM vendors in a headless browser every day, reads a page with an LLM when it changed, and publishes what it found as one catalogue: models, their properties and parameters, and prices with variants, long-context tiers and off-peak hours. A weekly scan proposes the pages to read; an administrator confirms them. pacod-gw takes its model data from it once a day, and can take the same from OpenRouter, LiteLLM or a file instead.
+
+| Highlights | Stack |
+|---|---|
+| Read from the vendors' own pages<br>One catalogue, one API<br>A browser that reaches nothing but its proxy | Rust · axum · PostgreSQL · Chromium · SvelteKit · Caddy · Docker · Prometheus |
+
+[Repository](https://github.com/pacod22/pacod-aggregator)
+</details>
+
 ## How they fit together
 
 Every LLM call goes through the gateway. Every person signs in through the identity provider. The products on top stay simple — and never hold a provider's key.
@@ -123,6 +150,8 @@ Every LLM call goes through the gateway. Every person signs in through the ident
 | Products | pacod-ap · pacod-cms · pacod-kb | Agents, editorial sites, knowledge — sign-in via pacod-id, model calls via pacod-gw, never hold provider keys |
 | Model access | pacod-gw | Provider keys, quotas, per-call pricing, usage analytics; OpenAI / Anthropic / Gemini dialects |
 | Measurement | pacod-benchmark | What the gateway adds to each call, per configuration; reports published to the gateway's console |
+| Discovery | pacod-broker | What can be called, at what price, and how it has behaved; the gateway offers, proposes and witnesses there |
+| Model data | pacod-aggregator | Models, parameters and prices from the vendors' own pages; the gateway syncs them daily |
 
 Run together, the products share **one of each common component** on one Docker network, `pacod-net`: one Caddy, one PostgreSQL (a database and role per product), one Qdrant, one embeddings service, one pacod-id, one gateway and one monitoring stack (Prometheus, Grafana, OpenTelemetry). Stores a product owns stay with it — the gateway's ClickHouse, the CMS's MongoDB, the agent platform's Redis. Run alone, each repository brings its own copies of the shared parts.
 
@@ -174,11 +203,11 @@ The PACOD website is built entirely on pacod-cms: the project pages, the assista
 
 ## Try it on your laptop
 
-**The whole stack** — identity, gateway, agents, CMS, knowledge base and benchmarks working together — comes from [pacod-demo](https://github.com/pacod22/pacod-demo): one configuration file, one `make`. To see it first, it runs live at [demo.pacod.io](https://demo.pacod.io).
+**The whole stack** — identity, gateway, agents, CMS, knowledge base, benchmarks, broker and model data working together — comes from [pacod-demo](https://github.com/pacod22/pacod-demo): one configuration file, one `make`. To see it first, it runs live at [demo.pacod.io](https://demo.pacod.io).
 
 ```bash
 mkdir pacod && cd pacod
-for r in pacod-demo pacod-id pacod-gw pacod-ap pacod-cms pacod-kb pacod-benchmark; do
+for r in pacod-demo pacod-id pacod-gw pacod-ap pacod-cms pacod-kb pacod-benchmark pacod-broker pacod-aggregator; do
   git clone https://github.com/pacod22/$r.git
 done
 cd pacod-demo
@@ -198,6 +227,8 @@ Everything sits behind one port, with one sign-in for every product:
 | `studio.localhost:8800` · `cms.localhost:8800` | CMS studio and a demo website (also `minimal.` and `space.`, the Starward magazine) |
 | `kb.localhost:8800` | knowledge base |
 | `bench.localhost:8800` | gateway benchmarks — suites, runs, comparisons |
+| `broker.localhost:8800` | the discovery broker — resources, providers, reputation |
+| `agg.localhost:8800` | model data — vendors, their pages, runs, the catalogue |
 | `id.localhost:8800/admin` | identity administration |
 | `grafana.localhost:8800` | dashboards of every product |
 
