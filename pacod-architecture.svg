@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 740" width="1280" height="740" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 900" width="1280" height="900" role="img" aria-labelledby="t d">
   <title id="t">pacod architecture: components and interfaces</title>
-  <desc id="d">pacod-id on the left provides OpenID Connect sign-in and a change feed to pacod-ap, pacod-cms and pacod-kb, which check access locally. The products send LLM calls in OpenAI, Anthropic or Gemini dialect to pacod-gw on the right, which holds provider keys, applies quotas and pricing, records usage in ClickHouse and forwards calls to LLM providers.</desc>
+  <desc id="d">pacod-id on the left provides OpenID Connect sign-in and a change feed to pacod-ap, pacod-cms and pacod-kb, which check access locally. The products send LLM calls in OpenAI, Anthropic or Gemini dialect to pacod-gw on the right, which holds provider keys, applies quotas and pricing, governs MCP tools and agents, records usage in ClickHouse and forwards calls to LLM providers. Below, three projects work with the gateway: pacod-benchmark measures it, pacod-broker is where it and the products offer and discover what can be called, and pacod-aggregator gives it model data read from the vendors' own pages.</desc>
   <defs>
     <style>
       text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
@@ -23,7 +23,7 @@
     </linearGradient>
   </defs>
 
-  <rect width="1280" height="740" rx="24" fill="url(#bg)"/>
+  <rect width="1280" height="900" rx="24" fill="url(#bg)"/>
   <text x="64" y="58" class="cap">ARCHITECTURE · COMPONENTS AND INTERFACES</text>
 
   <!-- people strip -->
@@ -115,10 +115,10 @@
   <line x1="980" y1="260" x2="1196" y2="260" stroke="#1d4a46"/>
   <g class="item">
     <text x="980" y="290">Proxy &amp; managed modes</text>
-    <text x="980" y="320">Dialect translation</text>
-    <text x="980" y="350">Provider keys (only here)</text>
-    <text x="980" y="380">Quotas per workspace</text>
-    <text x="980" y="410">Price per call</text>
+    <text x="980" y="320">Provider keys (only here)</text>
+    <text x="980" y="350">Quotas per workspace</text>
+    <text x="980" y="380">Price per call</text>
+    <text x="980" y="410">Governed MCP tools · A2A</text>
   </g>
   <line x1="980" y1="432" x2="1196" y2="432" stroke="#1d4a46"/>
   <text x="980" y="460" class="sub">Console</text>
@@ -130,21 +130,65 @@
   <rect x="1088" y="556" width="104" height="28" rx="8" fill="none" stroke="#2dd4bf" stroke-opacity=".6"/>
   <text x="1140" y="575" class="chip" fill="#99f6e4" text-anchor="middle">ClickHouse</text>
 
-  <!-- GW -> providers -->
-  <line x1="1088" y1="608" x2="1088" y2="642" stroke="#2dd4bf" stroke-width="2.5" marker-end="url(#mt)"/>
-  <rect x="960" y="646" width="256" height="58" rx="12" fill="#171a23" stroke="#2a2f3a"/>
-  <text x="1088" y="670" class="lbl" fill="#d7dbe5" text-anchor="middle">LLM PROVIDERS</text>
-  <text x="1088" y="692" class="sub" text-anchor="middle">OpenAI · Anthropic · Gemini · local</text>
+  <!-- GW -> providers (top right) -->
+  <rect x="960" y="74" width="256" height="58" rx="12" fill="#171a23" stroke="#2a2f3a"/>
+  <text x="1088" y="98" class="lbl" fill="#d7dbe5" text-anchor="middle">LLM PROVIDERS</text>
+  <text x="1088" y="120" class="sub" text-anchor="middle">OpenAI · Anthropic · Gemini · local</text>
+  <line x1="1088" y1="178" x2="1088" y2="138" stroke="#2dd4bf" stroke-width="2.5" marker-end="url(#mt)"/>
+
+  <!-- ===== around the gateway (bottom) ===== -->
+  <!-- one line from the gateway to each of the three -->
+  <line x1="1088" y1="608" x2="1088" y2="670" stroke="#8b93a7" stroke-width="2.5"/>
+  <line x1="192" y1="638" x2="1088" y2="638" stroke="#8b93a7" stroke-width="2.5"/>
+  <line x1="192" y1="638" x2="192" y2="670" stroke="#8b93a7" stroke-width="2.5"/>
+  <line x1="640" y1="638" x2="640" y2="670" stroke="#8b93a7" stroke-width="2.5"/>
+  <text x="204" y="660" class="sub">measures it</text>
+  <text x="652" y="660" class="sub">offers · discovers</text>
+  <text x="1100" y="660" class="sub">model data, daily</text>
+
+  <!-- BM -->
+  <rect x="64" y="672" width="256" height="130" rx="14" fill="#211c12" stroke="#f59e0b" stroke-opacity=".55"/>
+  <rect x="84" y="690" width="44" height="38" rx="9" fill="#fbbf24"/>
+  <text x="106" y="715" class="badge" text-anchor="middle" fill="#0f1117">BM</text>
+  <text x="142" y="707" class="name" style="font-size:18px">pacod-benchmark</text>
+  <text x="142" y="725" class="role" fill="#fcd34d">GATEWAY BENCHMARKS</text>
+  <rect x="84" y="742" width="96" height="26" rx="7" fill="#2a2418"/><text x="132" y="760" class="chip" fill="#d7dbe5" text-anchor="middle">Rust · axum</text>
+  <rect x="188" y="742" width="72" height="26" rx="7" fill="none" stroke="#a78bfa" stroke-opacity=".7"/><text x="224" y="760" class="chip" fill="#c4b5fd" text-anchor="middle">access</text>
+  <text x="84" y="788" class="sub">Each cell against a baseline</text>
+
+  <!-- BR -->
+  <rect x="460" y="672" width="360" height="130" rx="14" fill="#211c12" stroke="#f59e0b" stroke-opacity=".55"/>
+  <rect x="480" y="690" width="44" height="38" rx="9" fill="#fbbf24"/>
+  <text x="502" y="715" class="badge" text-anchor="middle" fill="#0f1117">BR</text>
+  <text x="538" y="707" class="name" style="font-size:18px">pacod-broker</text>
+  <text x="538" y="725" class="role" fill="#fcd34d">DISCOVERY &amp; REPUTATION</text>
+  <rect x="480" y="742" width="96" height="26" rx="7" fill="#2a2418"/><text x="528" y="760" class="chip" fill="#d7dbe5" text-anchor="middle">Rust · axum</text>
+  <rect x="582" y="742" width="46" height="26" rx="7" fill="#2a2418"/><text x="605" y="760" class="chip" fill="#d7dbe5" text-anchor="middle">MCP</text>
+  <rect x="634" y="742" width="88" height="26" rx="7" fill="#2a2418"/><text x="678" y="760" class="chip" fill="#d7dbe5" text-anchor="middle">no database</text>
+  <rect x="728" y="742" width="72" height="26" rx="7" fill="none" stroke="#a78bfa" stroke-opacity=".7"/><text x="764" y="760" class="chip" fill="#c4b5fd" text-anchor="middle">access</text>
+  <text x="480" y="788" class="sub">Models · MCP servers · agents · GPUs</text>
+
+  <!-- AG -->
+  <rect x="960" y="672" width="256" height="130" rx="14" fill="#211c12" stroke="#f59e0b" stroke-opacity=".55"/>
+  <rect x="980" y="690" width="44" height="38" rx="9" fill="#fbbf24"/>
+  <text x="1002" y="715" class="badge" text-anchor="middle" fill="#0f1117">AG</text>
+  <text x="1038" y="707" class="name" style="font-size:18px">pacod-aggregator</text>
+  <text x="1038" y="725" class="role" fill="#fcd34d">MODEL DATA</text>
+  <rect x="980" y="742" width="128" height="26" rx="7" fill="#2a2418"/><text x="1044" y="760" class="chip" fill="#d7dbe5" text-anchor="middle">Rust · Chromium</text>
+  <rect x="1116" y="742" width="72" height="26" rx="7" fill="none" stroke="#a78bfa" stroke-opacity=".7"/><text x="1152" y="760" class="chip" fill="#c4b5fd" text-anchor="middle">access</text>
+  <text x="980" y="788" class="sub">From the vendors' own pages</text>
 
   <!-- legend -->
-  <g transform="translate(64 666)">
+  <g transform="translate(64 840)">
     <line x1="0" y1="0" x2="40" y2="0" stroke="#a78bfa" stroke-width="2.5" stroke-dasharray="7 5"/>
     <text x="52" y="5" class="sub">identity &amp; access</text>
     <line x1="200" y1="0" x2="240" y2="0" stroke="#2dd4bf" stroke-width="2.5"/>
     <text x="252" y="5" class="sub">model traffic</text>
-    <rect x="380" y="-13" width="56" height="26" rx="7" fill="none" stroke="#a78bfa" stroke-opacity=".7"/>
-    <text x="408" y="5" class="chip" fill="#c4b5fd" text-anchor="middle">access</text>
-    <text x="448" y="5" class="sub">local permission check</text>
+    <line x1="380" y1="0" x2="420" y2="0" stroke="#8b93a7" stroke-width="2.5"/>
+    <text x="432" y="5" class="sub">works with the gateway</text>
+    <rect x="620" y="-13" width="56" height="26" rx="7" fill="none" stroke="#a78bfa" stroke-opacity=".7"/>
+    <text x="648" y="5" class="chip" fill="#c4b5fd" text-anchor="middle">access</text>
+    <text x="688" y="5" class="sub">local permission check</text>
     <text x="0" y="34" class="sub">Each project also runs on its own with Docker Compose; Helm charts where it matters.</text>
   </g>
 </svg>
