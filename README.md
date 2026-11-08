@@ -43,11 +43,11 @@ Use one on its own, or run them together. Each is a complete product with its ow
 <details>
 <summary><b>GW · pacod-gw</b> — AI gateway</summary>
 
-Sits between applications and LLM providers. Rust core relays or translates every call, keeps provider keys out of apps, enforces quotas, prices each request, streams usage into ClickHouse — managed from a SvelteKit console.
+Sits between applications and LLM providers. Rust core relays or translates every call, keeps provider keys out of apps, enforces quotas, prices each request, streams usage into ClickHouse — managed from a SvelteKit console. Agents reach their tools through it too: MCP servers an organisation registers and approves, served on one governed `/mcp`, registered agents with a kill switch, and remote A2A agents behind its proxy. That is the full gateway; the minimal one serves models only.
 
 | Highlights | Stack |
 |---|---|
-| Proxy + managed modes on one Rust core<br>OpenAI, Anthropic, Gemini dialects<br>Quotas, cost, analytics per workspace | Rust · PostgreSQL · ClickHouse · SvelteKit · Caddy · Docker · Helm · Prometheus |
+| Proxy + managed modes on one Rust core<br>OpenAI, Anthropic, Gemini dialects<br>Quotas, cost, analytics per workspace<br>Governed MCP tools, registered agents, A2A proxy | Rust · PostgreSQL · ClickHouse · SvelteKit · Caddy · Docker · Helm · Prometheus |
 
 [Docs](https://www.pacod.io/p/pacod-gw) · [Repository](https://github.com/pacod22/pacod-gw)
 </details>
@@ -103,7 +103,7 @@ Ingests files and web pages, converts to canonical Markdown, indexes for hybrid 
 <details>
 <summary><b>BM · pacod-benchmark</b> — Gateway benchmarks</summary>
 
-Measures pacod-gw — managed and proxy modes, the minimal gateway, deployment layouts — and other gateways, in many configurations in one run. Every cell is measured against a baseline straight to the mock provider, so what is left is what the gateway adds. Its UI writes the suites, follows the runs and compares them; reports go to the gateway's console.
+Measures pacod-gw — managed and proxy modes, the minimal gateway, deployment layouts, and its governed tool and agent calls (MCP, A2A) — and other gateways, in many configurations in one run. Every cell is measured against a baseline straight to the mock provider, so what is left is what the gateway adds. Its UI writes the suites, follows the runs and compares them; reports go to the gateway's console.
 
 | Highlights | Stack |
 |---|---|
@@ -115,7 +115,7 @@ Measures pacod-gw — managed and proxy modes, the minimal gateway, deployment l
 <details>
 <summary><b>BR · pacod-broker</b> — Discovery and reputation</summary>
 
-Providers announce what can be called: models, MCP servers, agents, tools and GPU capacity, each with its interfaces, its prices and availability over time and the hardware it runs on. Consumers discover it, and both sides earn a reputation. pacod-gw offers its templates there, takes models the broker lists at its providers as proposals, and confirms how calls went.
+Providers announce what can be called: models, MCP servers, agents, tools and GPU capacity, each with its interfaces, its prices and availability over time and the hardware it runs on. Consumers discover it, and both sides earn a reputation. pacod-gw offers its templates and models there, takes models the broker lists at its providers as proposals, and confirms how calls went.
 
 | Highlights | Stack |
 |---|---|
@@ -148,7 +148,7 @@ Every LLM call goes through the gateway. Every person signs in through the ident
 |---|---|---|
 | Identity | pacod-id | OIDC sign-in, accounts, organisations, roles; change feed for local access checks |
 | Products | pacod-ap · pacod-cms · pacod-kb | Agents, editorial sites, knowledge — sign-in via pacod-id, model calls via pacod-gw, never hold provider keys |
-| Model access | pacod-gw | Provider keys, quotas, per-call pricing, usage analytics; OpenAI / Anthropic / Gemini dialects |
+| Model access | pacod-gw | Provider keys, quotas, per-call pricing, usage analytics; OpenAI / Anthropic / Gemini dialects; governed MCP tools and registered agents |
 | Measurement | pacod-benchmark | What the gateway adds to each call, per configuration; reports published to the gateway's console |
 | Discovery | pacod-broker | What can be called, at what price, and how it has behaved; the gateway offers, proposes and witnesses there |
 | Model data | pacod-aggregator | Models, parameters and prices from the vendors' own pages; the gateway syncs them daily |
