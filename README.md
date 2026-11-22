@@ -17,7 +17,7 @@ PACOD runs its own AI assistants and its website on them, at [app.pacod.io](http
 ![Docker](https://img.shields.io/badge/Docker_Compose-%E2%9C%93-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![Helm](https://img.shields.io/badge/Helm-%E2%9C%93-0F1689?style=flat-square&logo=helm&logoColor=white)
 
-[**Website**](https://www.pacod.io) · [Assistants](https://www.pacod.io/p/assistants) · [Projects](https://www.pacod.io/p/projects) · [How it fits](https://www.pacod.io/p/architecture) · [Blog](https://www.pacod.io/latest) · [Live demo](https://demo.pacod.io) · [Run the whole stack](https://github.com/pacod22/pacod-demo)
+[**Website**](https://www.pacod.io) · [Assistants](https://www.pacod.io/p/assistants) · [Projects](https://www.pacod.io/p/projects) · [How it fits](https://www.pacod.io/p/architecture) · [Blog](https://www.pacod.io/latest) · [Live demo](https://demo.pacod.io) · [Run the whole stack](https://github.com/pacod22/pacod-stack)
 
 [English](https://www.pacod.io/) · [Български](https://www.pacod.io/?lang=bg) · [Deutsch](https://www.pacod.io/?lang=de) · [Русский](https://www.pacod.io/?lang=ru)
 
@@ -27,7 +27,7 @@ PACOD runs its own AI assistants and its website on them, at [app.pacod.io](http
 
 ## Projects
 
-Use one on its own, or run them together. Each is a complete product with its own repository, documentation and Docker setup — and [pacod-demo](https://github.com/pacod22/pacod-demo) runs all eight as one platform, live at [demo.pacod.io](https://demo.pacod.io).
+Use one on its own, or run them together. Each is a complete product with its own repository, documentation and Docker setup — and [pacod-stack](https://github.com/pacod22/pacod-stack) runs all eight as one platform, live at [demo.pacod.io](https://demo.pacod.io).
 
 | | Project | Role | What it does | Repo |
 |---|---|---|---|---|
@@ -203,16 +203,16 @@ The PACOD website is built entirely on pacod-cms: the project pages, the assista
 
 ## Try it on your laptop
 
-**The whole stack** — identity, gateway, agents, CMS, knowledge base, benchmarks, broker and model data working together — comes from [pacod-demo](https://github.com/pacod22/pacod-demo): one configuration file, one `make`. To see it first, it runs live at [demo.pacod.io](https://demo.pacod.io).
+**The whole stack** — identity, gateway, agents, CMS, knowledge base, benchmarks, broker and model data working together — comes from [pacod-stack](https://github.com/pacod22/pacod-stack): one configuration file, one `make`. To see it first, it runs live at [demo.pacod.io](https://demo.pacod.io).
 
 ```bash
 mkdir pacod && cd pacod
-for r in pacod-demo pacod-id pacod-gw pacod-ap pacod-cms pacod-kb pacod-benchmark pacod-broker pacod-aggregator; do
+for r in pacod-stack pacod-id pacod-gw pacod-ap pacod-cms pacod-kb pacod-benchmark pacod-broker pacod-aggregator; do
   git clone https://github.com/pacod22/$r.git
 done
-cd pacod-demo
-cp demo.env.example demo.env   # the configuration file; these settings put the demo on this machine only:
-printf '%s\n' DEMO_DOMAIN=localhost DEMO_TLS_CERT= DEMO_TLS_KEY= DEMO_HTTP_PORT=8800 DEMO_BIND=127.0.0.1 >> demo.env
+cd pacod-stack
+cp stack.env.example stack.env   # the configuration file; these settings put the stack on this machine only:
+printf '%s\n' STACK_DOMAIN=localhost STACK_TLS_CERT= STACK_TLS_KEY= STACK_HTTP_PORT=8800 STACK_BIND=127.0.0.1 >> stack.env
 make up        # build, start, bootstrap; prints the addresses and the admin's password
 make verify    # check that everything works together
 ```
@@ -224,7 +224,7 @@ Everything sits behind one port, with one sign-in for every product:
 | `app.localhost:8800` | agent platform — chat and admin console |
 | `console.localhost:8800` | gateway console — providers, models, keys, usage |
 | `gw.localhost:8800` | the gateway's API — OpenAI-compatible at `/v1`, governed MCP tools at `/mcp` |
-| `localhost:8800` | the demo's home page — every product, with its links |
+| `localhost:8800` | the stack's home page — every product, with its links |
 | `studio.localhost:8800` · `cms.localhost:8800` | CMS studio and a demo website (also `minimal.` and `space.`, the Starward magazine) |
 | `kb.localhost:8800` | knowledge base |
 | `bench.localhost:8800` | gateway benchmarks — suites, runs, comparisons |
@@ -233,15 +233,15 @@ Everything sits behind one port, with one sign-in for every product:
 | `id.localhost:8800/admin` | identity administration |
 | `grafana.localhost:8800` | dashboards of every product |
 
-With no provider key set, every model call goes to the gateway's **mock provider** — nothing leaves your machine until you add a key to `demo.env`. Needs Docker with Compose 2.24+ and about 8 GB of memory for Docker; the first build takes 30–60 minutes, later starts about two.
+With no provider key set, every model call goes to the gateway's **mock provider** — nothing leaves your machine until you add a key to `stack.env`. Needs Docker with Compose 2.24+ and about 8 GB of memory for Docker; the first build takes 30–60 minutes, later starts about two.
 
-**Fewer products** for a smaller machine or a quicker first build: `DEMO_PRODUCTS=gw,cms` in `demo.env` runs only the gateway and the CMS, besides pacod-id and the shared parts, which always run. A product brings what it needs: pacod-ap and pacod-benchmark bring the gateway, pacod-kb the gateway and pacod-ap. Every repository in the loop above is still needed, because the shared parts mount files from each.
+**Fewer products** for a smaller machine or a quicker first build: `STACK_PRODUCTS=gw,cms` in `stack.env` runs only the gateway and the CMS, besides pacod-id and the shared parts, which always run. A product brings what it needs: pacod-ap and pacod-benchmark bring the gateway, pacod-kb the gateway and pacod-ap. Every repository in the loop above is still needed, because the shared parts mount files from each.
 
-**On a server in your network** without DNS names of its own, reach the demo through an SSH tunnel, or under wildcard names such as `192.168.1.50.nip.io` — [pacod-demo says how](https://github.com/pacod22/pacod-demo#a-demo-on-a-local-server-without-dns).
+**On a server in your network** without DNS names of its own, reach the stack through an SSH tunnel, or under wildcard names such as `192.168.1.50.nip.io` — [pacod-stack says how](https://github.com/pacod22/pacod-stack#a-stack-on-a-local-server-without-dns).
 
 **One project on its own** starts with a couple of `make` commands and the same mock provider — see each repository's README.
 
-→ [Run the whole stack](https://github.com/pacod22/pacod-demo) · [Start with the gateway](https://www.pacod.io/p/pacod-gw)
+→ [Run the whole stack](https://github.com/pacod22/pacod-stack) · [Start with the gateway](https://www.pacod.io/p/pacod-gw)
 
 ## Contributing
 
